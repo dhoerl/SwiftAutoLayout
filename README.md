@@ -1,13 +1,36 @@
 ## SwiftAutoLayout
 
-SwiftAutoLayout is a very small DSL for Autolayout, intended to provide a more declarative way to express layout constraints. Here's a quick example:
+Latest Update July 27, 2015
 
+SwiftAutoLayout is a very small DSL for Auto Layout, intended to provide a more declarative way to express layout constraints.
+
+### dhoerl Notes
+This code is a great example of doing something quite useful in a few lines of code, by really leveraging Swift. What is
+so interesting here is that the original author leverages Swift Structures to create intermediate objects that themselves are never
+exposed to the user of it.
+
+While the original author has done a masterful job, the code is getting stale and not keeping up with changes to NSLayoutConstraint. 
+
+Changes:    
+
+* support 'priority' with '~ value' 
+* add additional methods to permit the use of 'Ints' in multipliers, constants, and priority
+* add the new 'NSLayoutAttribute' attributes introduced in iOS8
+* incorporate the latest @testability feature (which made it possible to remove most 'public' methods
+* add tests for 'priority'
+
+While I'm aware of other larger projects to support Auto Layout, I prefer small and easy to understand, as in the end you may end up needing to support the code yourself.
+
+### Original Notes
+
+ Here's a quick example:
+ 
 ```swift
 // this:
-let constraint = view1.al_left == view2.al_right * 2.0 + 10.0
+let constraint = view1.al_left == view2.al_right * 2 + 10 ~ 100
 		
 // is equivalent to:
-let constraint = NSLayoutConstraint(item: view1, attribute: NSLayoutAttribute.Left, relatedBy: NSLayoutRelation.Equal, toItem: view2, attribute: NSLayoutAttribute.Right, multiplier: 2.0, constant: 10.0)
+let constraint = NSLayoutConstraint(item: view1, attribute: NSLayoutAttribute.Left, relatedBy: NSLayoutRelation.Equal, toItem: view2, attribute: NSLayoutAttribute.Right, multiplier: 2.0, constant: 10.0) with a priority of 100
 ```
 
 You may notice that this looks a lot like the linear equation that a constraint represents. From the [Apple documentation](https://developer.apple.com/library/mac/documentation/AppKit/Reference/NSLayoutConstraint_Class/NSLayoutConstraint/NSLayoutConstraint.html):

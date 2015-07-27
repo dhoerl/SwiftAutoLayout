@@ -4,10 +4,11 @@
 //
 //  Created by Indragie on 6/17/14.
 //  Copyright (c) 2014 Indragie Karunaratne. All rights reserved.
+//  Copyright (c) 2015 David Hoerl. All rights reserved.
 //
 
+@testable import SwiftAutoLayout
 import XCTest
-import SwiftAutoLayout
 
 // The imports from SwiftAutoLayout don't cascade here
 #if os(OSX)
@@ -98,13 +99,20 @@ class SwiftAutoLayoutTests: XCTestCase {
         let constraint = view1.al_left == view2.al_right / 2.0
         XCTAssertEqual(constraint.multiplier, CGFloat(0.5), "Expect constraint multiplier to be 0.5")
     }
-    
+
+    func testPriority() {
+        let constraint0 = view1.al_left == view2.al_right ! 30.0
+        XCTAssertEqual(constraint0.priority, UILayoutPriority(30), "Expect constraint multiplier to be 30")
+        let constraint1 = view1.al_left == view2.al_right ! 30
+        XCTAssertEqual(constraint1.priority, UILayoutPriority(30), "Expect constraint multiplier to be 30")
+    }
+
     func testCompleteConstraint() {
         let constraint = view1.al_left == view2.al_right * 2.0 / 0.5 + 20.0 - 10.0
-        XCTAssertEqual(constraint.firstItem as ALView, view1, "Expect first item to be view1")
+        XCTAssertEqual(constraint.firstItem as! ALView, view1, "Expect first item to be view1")
         XCTAssertEqual(constraint.firstAttribute, NSLayoutAttribute.Left, "Expect first attribute to be NSLayoutAttribute.Left")
         XCTAssertEqual(constraint.relation, NSLayoutRelation.Equal, "Expect constraint relation to be NSLayoutRelation.Equal")
-        XCTAssertEqual(constraint.secondItem as ALView, view2, "Expect second item to be view2")
+        XCTAssertEqual(constraint.secondItem as! ALView, view2, "Expect second item to be view2")
         XCTAssertEqual(constraint.secondAttribute, NSLayoutAttribute.Right, "Expect second attribute to be NSLayoutAttribute.Right")
         XCTAssertEqual(constraint.constant, CGFloat(10.0), "Expect constraint constant to be 10.0")
         XCTAssertEqual(constraint.multiplier, CGFloat(4.0), "Expect constraint multiplier to be 4.0")
@@ -117,16 +125,17 @@ class SwiftAutoLayoutTests: XCTestCase {
     }
     
     func testRelationsWithoutSecondView() {
-        let constraints = [view1.al_width == 10.0 * 2.0,
-                           view1.al_width.equalToConstant(10.0 * 2.0),
-                           view1.al_width >= 10.0 * 2.0,
-                           view1.al_width.greaterThanOrEqualToConstant(10.0 * 2.0),
-                           view1.al_width <= 10.0 * 2.0,
-                           view1.al_width.lessThanOrEqualToConstant(10.0 * 2.0)]
+		let val = CGFloat(10.0 * 2.0)
+        let constraints = [view1.al_width == val,
+                           view1.al_width.equalToConstant(val),
+                           view1.al_width >= val,
+                           view1.al_width.greaterThanOrEqualToConstant(val),
+                           view1.al_width <= val,
+                           view1.al_width.lessThanOrEqualToConstant(val)]
         
         for constraint in constraints {
-            XCTAssertEqual(constraint.constant, CGFloat(20.0), "Expect constraint constant to be 20.0")
-            XCTAssertEqual(constraint.multiplier, CGFloat(1.0), "Expect constraint multiplier to be 0.0")
+            XCTAssertEqual(constraint.constant, CGFloat(val), "Expect constraint constant to be \(val)")
+            XCTAssertEqual(constraint.multiplier, CGFloat(1.0), "Expect constraint multiplier to be 1.0")
         }
     }
 }

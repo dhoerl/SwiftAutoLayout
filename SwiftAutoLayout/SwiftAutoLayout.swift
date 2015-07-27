@@ -1,4 +1,9 @@
+//  SwiftAutoLayout
+//  Lightweight Auto Layout Assistant. Write constraints in a more declarative way.
+
 //  Copyright (c) 2014 Indragie Karunaratne. All rights reserved.
+//  Copyright (c) 2015 David Hoerl. All rights reserved.
+//
 //  Licensed under the MIT license, see LICENSE file for more info.
 
 #if os(OSX)
@@ -10,10 +15,10 @@
 #endif
 
 public struct ALLayoutItem {
-    public let view: ALView
-    public let attribute: NSLayoutAttribute
-    public let multiplier: CGFloat
-    public let constant: CGFloat
+    let view: ALView
+    let attribute: NSLayoutAttribute
+    let multiplier: CGFloat
+    let constant: CGFloat
     
     init(view: ALView, attribute: NSLayoutAttribute, multiplier: CGFloat = 1.0, constant: CGFloat = 0.0) {
         self.view = view
@@ -30,65 +35,90 @@ public struct ALLayoutItem {
     // rdar://17412596, OpenRadar: http://www.openradar.me/radar?id=5275533159956480
     
     /// Builds a constraint by relating the item to another item.
-    public func relateTo(right: ALLayoutItem, relation: NSLayoutRelation) -> NSLayoutConstraint {
+    func relateTo(right: ALLayoutItem, relation: NSLayoutRelation) -> NSLayoutConstraint {
         return NSLayoutConstraint(item: view, attribute: attribute, relatedBy: relation, toItem: right.view, attribute: right.attribute, multiplier: right.multiplier, constant: right.constant)
     }
     
     /// Builds a constraint by relating the item to a constant value.
-    public func relateToConstant(right: CGFloat, relation: NSLayoutRelation) -> NSLayoutConstraint {
+    func relateToConstant(right: CGFloat, relation: NSLayoutRelation) -> NSLayoutConstraint {
         return NSLayoutConstraint(item: view, attribute: attribute, relatedBy: relation, toItem: nil, attribute: NSLayoutAttribute.NotAnAttribute, multiplier: 1.0, constant: right)
     }
     
     /// Equivalent to NSLayoutRelation.Equal
-    public func equalTo(right: ALLayoutItem) -> NSLayoutConstraint {
+    func equalTo(right: ALLayoutItem) -> NSLayoutConstraint {
         return relateTo(right, relation: .Equal)
     }
     
     /// Equivalent to NSLayoutRelation.Equal
-    public func equalToConstant(right: CGFloat) -> NSLayoutConstraint {
+    func equalToConstant(right: CGFloat) -> NSLayoutConstraint {
         return relateToConstant(right, relation: .Equal)
     }
     
     /// Equivalent to NSLayoutRelation.GreaterThanOrEqual
-    public func greaterThanOrEqualTo(right: ALLayoutItem) -> NSLayoutConstraint {
+    func greaterThanOrEqualTo(right: ALLayoutItem) -> NSLayoutConstraint {
         return relateTo(right, relation: .GreaterThanOrEqual)
     }
     
     /// Equivalent to NSLayoutRelation.GreaterThanOrEqual
-    public func greaterThanOrEqualToConstant(right: CGFloat) -> NSLayoutConstraint {
+    func greaterThanOrEqualToConstant(right: CGFloat) -> NSLayoutConstraint {
         return relateToConstant(right, relation: .GreaterThanOrEqual)
     }
     
     /// Equivalent to NSLayoutRelation.LessThanOrEqual
-    public func lessThanOrEqualTo(right: ALLayoutItem) -> NSLayoutConstraint {
+    func lessThanOrEqualTo(right: ALLayoutItem) -> NSLayoutConstraint {
         return relateTo(right, relation: .LessThanOrEqual)
     }
     
     /// Equivalent to NSLayoutRelation.LessThanOrEqual
-    public func lessThanOrEqualToConstant(right: CGFloat) -> NSLayoutConstraint {
+    func lessThanOrEqualToConstant(right: CGFloat) -> NSLayoutConstraint {
         return relateToConstant(right, relation: .LessThanOrEqual)
     }
 }
 
+
 /// Multiplies the operand's multiplier by the RHS value
 public func * (left: ALLayoutItem, right: CGFloat) -> ALLayoutItem {
 	return ALLayoutItem(view: left.view, attribute: left.attribute, multiplier: left.multiplier * right, constant: left.constant)
+}
+public func * (left: ALLayoutItem, right: Int) -> ALLayoutItem {
+	return ALLayoutItem(view: left.view, attribute: left.attribute, multiplier: left.multiplier * CGFloat(right), constant: left.constant)
 }
 
 /// Divides the operand's multiplier by the RHS value
 public func / (left: ALLayoutItem, right: CGFloat) -> ALLayoutItem {
 	return ALLayoutItem(view: left.view, attribute: left.attribute, multiplier: left.multiplier / right, constant: left.constant)
 }
+public func / (left: ALLayoutItem, right: Int) -> ALLayoutItem {
+	return ALLayoutItem(view: left.view, attribute: left.attribute, multiplier: left.multiplier / CGFloat(right), constant: left.constant)
+}
 
 /// Adds the RHS value to the operand's constant
 public func + (left: ALLayoutItem, right: CGFloat) -> ALLayoutItem {
 	return ALLayoutItem(view: left.view, attribute: left.attribute, multiplier: left.multiplier, constant: left.constant + right)
+}
+public func + (left: ALLayoutItem, right: Int) -> ALLayoutItem {
+	return ALLayoutItem(view: left.view, attribute: left.attribute, multiplier: left.multiplier, constant: left.constant + CGFloat(right))
 }
 
 /// Subtracts the RHS value from the operand's constant
 public func - (left: ALLayoutItem, right: CGFloat) -> ALLayoutItem {
 	return ALLayoutItem(view: left.view, attribute: left.attribute, multiplier: left.multiplier, constant: left.constant - right)
 }
+public func - (left: ALLayoutItem, right: Int) -> ALLayoutItem {
+	return ALLayoutItem(view: left.view, attribute: left.attribute, multiplier: left.multiplier, constant: left.constant - CGFloat(right))
+}
+
+/// Alow '~' to set the priority, as a trailing operation
+infix operator ! { associativity left precedence 100 }
+public func ! (constraint: NSLayoutConstraint, priority: UILayoutPriority) -> NSLayoutConstraint {
+    constraint.priority = priority
+    return constraint
+}
+public func ! (constraint: NSLayoutConstraint, priority: Int) -> NSLayoutConstraint {
+    constraint.priority = UILayoutPriority(priority)
+    return constraint
+}
+
 
 /// Equivalent to NSLayoutRelation.Equal
 public func == (left: ALLayoutItem, right: ALLayoutItem) -> NSLayoutConstraint {
@@ -178,5 +208,55 @@ public extension ALView {
     /// Equivalent to NSLayoutAttribute.Baseline
     var al_baseline: ALLayoutItem {
         return al_operand(.Baseline)
+    }
+
+    /// Equivalent to NSLayoutAttribute.FirstBaseline
+    var al_firstBaseline: ALLayoutItem {
+        return al_operand(.FirstBaseline)
+    }
+
+    /// Equivalent to NSLayoutAttribute.LastBaseline
+    var al_lastBaseline: ALLayoutItem {
+        return al_operand(.LastBaseline)
+    }
+
+    /// Equivalent to NSLayoutAttribute.LeftMargin
+    var al_leftMargin: ALLayoutItem {
+        return al_operand(.LeftMargin)
+    }
+
+    /// Equivalent to NSLayoutAttribute.RightMargin
+    var al_rightMargin: ALLayoutItem {
+        return al_operand(.RightMargin)
+    }
+
+    /// Equivalent to NSLayoutAttribute.TopMargin
+    var al_topMargin: ALLayoutItem {
+        return al_operand(.TopMargin)
+    }
+
+    /// Equivalent to NSLayoutAttribute.BottomMargin
+    var al_bottomMargin: ALLayoutItem {
+        return al_operand(.BottomMargin)
+    }
+
+    /// Equivalent to NSLayoutAttribute.LeadingMargin
+    var al_leadingMargin: ALLayoutItem {
+        return al_operand(.LeadingMargin)
+    }
+
+    /// Equivalent to NSLayoutAttribute.TrailingMargin
+    var al_trailingMargin: ALLayoutItem {
+        return al_operand(.TrailingMargin)
+    }
+
+    /// Equivalent to NSLayoutAttribute.CenterXWithinMargins
+    var al_centerXWithinMargins: ALLayoutItem {
+        return al_operand(.CenterXWithinMargins)
+    }
+
+    /// Equivalent to NSLayoutAttribute.CenterYWithinMargins
+    var al_centerYWithinMargins: ALLayoutItem {
+        return al_operand(.CenterYWithinMargins)
     }
 }

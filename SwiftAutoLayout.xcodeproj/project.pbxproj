@@ -34,6 +34,8 @@
 		725A2B441A0468F300F44058 /* SwiftAutoLayoutTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwiftAutoLayoutTests.swift; sourceTree = "<group>"; };
 		725A2B4E1A04695300F44058 /* SwiftAutoLayout.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SwiftAutoLayout.swift; sourceTree = "<group>"; };
 		725A2B551A046A3C00F44058 /* SwiftAutoLayout.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = SwiftAutoLayout.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		DE4931CD1B667023008C0DC9 /* LICENSE */ = {isa = PBXFileReference; lastKnownFileType = text; path = LICENSE; sourceTree = "<group>"; };
+		DE4931CE1B667023008C0DC9 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -65,6 +67,8 @@
 		725A2B281A0468F300F44058 = {
 			isa = PBXGroup;
 			children = (
+				DE4931CD1B667023008C0DC9 /* LICENSE */,
+				DE4931CE1B667023008C0DC9 /* README.md */,
 				725A2B341A0468F300F44058 /* SwiftAutoLayout */,
 				725A2B411A0468F300F44058 /* SwiftAutoLayoutTests */,
 				725A2B331A0468F300F44058 /* Products */,
@@ -198,6 +202,7 @@
 		725A2B291A0468F300F44058 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
+				LastSwiftUpdateCheck = 0700;
 				LastUpgradeCheck = 0610;
 				ORGANIZATIONNAME = "Indragie Karunaratne";
 				TargetAttributes = {
@@ -312,6 +317,7 @@
 				COPY_PHASE_STRIP = NO;
 				CURRENT_PROJECT_VERSION = 1;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_OPTIMIZATION_LEVEL = 0;
