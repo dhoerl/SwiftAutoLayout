@@ -90,33 +90,33 @@ public struct ALLayoutItem {
 public func * (left: ALLayoutItem, right: CGFloat) -> ALLayoutItem {
 	return ALLayoutItem(view: left.view, attribute: left.attribute, multiplier: left.multiplier * right, constant: left.constant)
 }
-//public func * (left: ALLayoutItem, right: Int) -> ALLayoutItem {
-//	return ALLayoutItem(view: left.view, attribute: left.attribute, multiplier: left.multiplier * CGFloat(right), constant: left.constant)
-//}
+public func * (left: ALLayoutItem, right: Int) -> ALLayoutItem {
+	return ALLayoutItem(view: left.view, attribute: left.attribute, multiplier: left.multiplier * CGFloat(right), constant: left.constant)
+}
 
 /// Divides the operand's multiplier by the RHS value
 public func / (left: ALLayoutItem, right: CGFloat) -> ALLayoutItem {
 	return ALLayoutItem(view: left.view, attribute: left.attribute, multiplier: left.multiplier / right, constant: left.constant)
 }
-//public func / (left: ALLayoutItem, right: Int) -> ALLayoutItem {
-//	return ALLayoutItem(view: left.view, attribute: left.attribute, multiplier: left.multiplier / CGFloat(right), constant: left.constant)
-//}
+public func / (left: ALLayoutItem, right: Int) -> ALLayoutItem {
+	return ALLayoutItem(view: left.view, attribute: left.attribute, multiplier: left.multiplier / CGFloat(right), constant: left.constant)
+}
 
 /// Adds the RHS value to the operand's constant
 public func + (left: ALLayoutItem, right: CGFloat) -> ALLayoutItem {
 	return ALLayoutItem(view: left.view, attribute: left.attribute, multiplier: left.multiplier, constant: left.constant + right)
 }
-//public func + (left: ALLayoutItem, right: Int) -> ALLayoutItem {
-//	return ALLayoutItem(view: left.view, attribute: left.attribute, multiplier: left.multiplier, constant: left.constant + CGFloat(right))
-//}
+public func + (left: ALLayoutItem, right: Int) -> ALLayoutItem {
+	return ALLayoutItem(view: left.view, attribute: left.attribute, multiplier: left.multiplier, constant: left.constant + CGFloat(right))
+}
 
 /// Subtracts the RHS value from the operand's constant
 public func - (left: ALLayoutItem, right: CGFloat) -> ALLayoutItem {
 	return ALLayoutItem(view: left.view, attribute: left.attribute, multiplier: left.multiplier, constant: left.constant - right)
 }
-//public func - (left: ALLayoutItem, right: Int) -> ALLayoutItem {
-//	return ALLayoutItem(view: left.view, attribute: left.attribute, multiplier: left.multiplier, constant: left.constant - CGFloat(right))
-//}
+public func - (left: ALLayoutItem, right: Int) -> ALLayoutItem {
+	return ALLayoutItem(view: left.view, attribute: left.attribute, multiplier: left.multiplier, constant: left.constant - CGFloat(right))
+}
 
 /// Alow '~' to set the priority, as a trailing operation
 infix operator ! { associativity left precedence 100 }
@@ -124,10 +124,10 @@ public func ! (constraint: NSLayoutConstraint, priority: UILayoutPriority) -> NS
     constraint.priority = priority
     return constraint
 }
-//public func ! (constraint: NSLayoutConstraint, priority: Int) -> NSLayoutConstraint {
-//    constraint.priority = UILayoutPriority(priority)
-//    return constraint
-//}
+public func ! (constraint: NSLayoutConstraint, priority: Int) -> NSLayoutConstraint {
+    constraint.priority = UILayoutPriority(priority)
+    return constraint
+}
 
 
 /// Equivalent to NSLayoutRelation.Equal
@@ -139,6 +139,9 @@ public func == (left: ALLayoutItem, right: ALLayoutItem) -> NSLayoutConstraint {
 public func == (left: ALLayoutItem, right: CGFloat) -> NSLayoutConstraint {
     return left.equalToConstant(right)
 }
+public func == (left: ALLayoutItem, right: Int) -> NSLayoutConstraint {
+    return left.equalToConstant(CGFloat(right))
+}
 
 /// Equivalent to NSLayoutRelation.GreaterThanOrEqual
 public func >= (left: ALLayoutItem, right: ALLayoutItem) -> NSLayoutConstraint {
@@ -149,6 +152,9 @@ public func >= (left: ALLayoutItem, right: ALLayoutItem) -> NSLayoutConstraint {
 public func >= (left: ALLayoutItem, right: CGFloat) -> NSLayoutConstraint {
     return left.greaterThanOrEqualToConstant(right)
 }
+public func >= (left: ALLayoutItem, right: Int) -> NSLayoutConstraint {
+    return left.greaterThanOrEqualToConstant(CGFloat(right))
+}
 
 /// Equivalent to NSLayoutRelation.LessThanOrEqual
 public func <= (left: ALLayoutItem, right: ALLayoutItem) -> NSLayoutConstraint {
@@ -158,6 +164,9 @@ public func <= (left: ALLayoutItem, right: ALLayoutItem) -> NSLayoutConstraint {
 /// Equivalent to NSLayoutRelation.LessThanOrEqual
 public func <= (left: ALLayoutItem, right: CGFloat) -> NSLayoutConstraint {
     return left.lessThanOrEqualToConstant(right)
+}
+public func <= (left: ALLayoutItem, right: Int) -> NSLayoutConstraint {
+    return left.lessThanOrEqualToConstant(CGFloat(right))
 }
 
 public extension ALView {
