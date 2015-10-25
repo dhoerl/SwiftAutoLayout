@@ -81,7 +81,9 @@ class SwiftAutoLayoutTests: XCTestCase {
     }
     
     func testAddition() {
-        let constraint = view1.al_left == view2.al_right + 10.0
+        var constraint = view1.al_left == view2.al_right + 10.0
+        XCTAssertEqual(constraint.constant, CGFloat(10.0), "Expect constraint constant to be 10.0")
+			constraint = view1.al_left - 10.0 == view2.al_right
         XCTAssertEqual(constraint.constant, CGFloat(10.0), "Expect constraint constant to be 10.0")
     }
     
@@ -109,21 +111,30 @@ class SwiftAutoLayoutTests: XCTestCase {
 
     func testCompleteConstraint() {
         let constraint = view1.al_left == view2.al_right * 2.0 / 0.5 + 20.0 - 10.0
-        XCTAssertEqual(constraint.firstItem as! ALView, view1, "Expect first item to be view1")
+        XCTAssertEqual(constraint.firstItem as? ALView, view1, "Expect first item to be view1")
         XCTAssertEqual(constraint.firstAttribute, NSLayoutAttribute.Left, "Expect first attribute to be NSLayoutAttribute.Left")
         XCTAssertEqual(constraint.relation, NSLayoutRelation.Equal, "Expect constraint relation to be NSLayoutRelation.Equal")
-        XCTAssertEqual(constraint.secondItem as! ALView, view2, "Expect second item to be view2")
+        XCTAssertEqual(constraint.secondItem as? ALView, view2, "Expect second item to be view2")
         XCTAssertEqual(constraint.secondAttribute, NSLayoutAttribute.Right, "Expect second attribute to be NSLayoutAttribute.Right")
         XCTAssertEqual(constraint.constant, CGFloat(10.0), "Expect constraint constant to be 10.0")
         XCTAssertEqual(constraint.multiplier, CGFloat(4.0), "Expect constraint multiplier to be 4.0")
     }
     
-    func testConstantMultiplierOnWrongSide() {
+    func testConstantMultiplierOnLeftSide() {
         let constraint = view1.al_left * 2.0 / 0.5 + 20.0 - 10.0 == view2.al_right
-        XCTAssertEqual(constraint.constant, CGFloat(0.0), "Expect constraint constant to be 0.0 when expression is on wrong side of the relation")
-        XCTAssertEqual(constraint.multiplier, CGFloat(1.0), "Expect constraint multiplier to be 1.0 when expression is on wrong side of the relation")
+        XCTAssertEqual(constraint.constant, CGFloat(-10.0), "Expect constraint constant to be 0.0 when expression is on wrong side of the relation")
+        XCTAssertEqual(constraint.multiplier, CGFloat(4.0), "Expect constraint multiplier to be 1.0 when expression is on wrong side of the relation")
     }
-    
+
+	func testStandardWidths() {
+        let constraint0 = view1.al_left == view2.al_right+^
+        XCTAssertEqual(constraint0.constant, ALLayoutItem.standardConstantBetweenSiblings, "Expect constraint constant to be 8")
+        let constraint1 = view1.al_left-^ == view2.al_right
+        XCTAssertEqual(constraint1.constant, ALLayoutItem.standardConstantBetweenSiblings, "Expect constraint constant to be 8")
+    }
+
+
+#if false
     func testRelationsWithoutSecondView() {
 		let val = CGFloat(10.0 * 2.0)
         let constraints = [view1.al_width == val,
@@ -138,4 +149,20 @@ class SwiftAutoLayoutTests: XCTestCase {
             XCTAssertEqual(constraint.multiplier, CGFloat(1.0), "Expect constraint multiplier to be 1.0")
         }
     }
+#else
+    func testRelationsWithoutSecondView() {
+		let val = CGFloat(10.0 * 2.0)
+        let constraints = [view1.al_width == val,
+                           view1.al_width.equalTo(val),
+                           view1.al_width >= val,
+                           view1.al_width.greaterThanOrEqualTo(val),
+                           view1.al_width <= val,
+                           view1.al_width.lessThanOrEqualTo(val)]
+
+        for constraint in constraints {
+            XCTAssertEqual(constraint.constant, CGFloat(val), "Expect constraint constant to be \(val)")
+            XCTAssertEqual(constraint.multiplier, CGFloat(1.0), "Expect constraint multiplier to be 1.0")
+        }
+    }
+#endif
 }
