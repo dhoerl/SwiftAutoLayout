@@ -1,26 +1,33 @@
 ## SwiftAutoLayout
 
-Latest Update July 27, 2015
+Latest Update October 25, 2015
 
 SwiftAutoLayout is a very small DSL for Auto Layout, intended to provide a more declarative way to express layout constraints.
 
 ### dhoerl Notes
-This code is a great example of doing something quite useful in a few lines of code, by really leveraging Swift. What is
+This code is a great example of doing something quite useful in a few lines of code. What is
 so interesting here is that the original author leverages Swift Structures to create intermediate objects that themselves are never
-exposed to the user of it.
+exposed to the user.
 
-While the original author has done a masterful job, the code is getting stale and not keeping up with changes to NSLayoutConstraint. 
+While the original author has done a masterful job, the code got stale and was not keeping up with changes to Swift nor NSLayoutConstraint. 
 
-Changes:    
+dhoerl Changes:    
 
-* support 'priority' with '~ value' 
+* support 'priority' with '~!value' 
+* supply an 'identifier' value using '& String'
+* support setting 'active'' to false using a trailing '--'
+* class vars return the standard values for sibling and superview spacing
+* postfix operators to add ('+^') or subtract ('-^) the sibling space
+* support using constants and multipliers on either side of an equality
 * add additional methods to permit the use of 'Ints' in multipliers, constants, and priority
 * add the new 'NSLayoutAttribute' attributes introduced in iOS8
 * incorporate the latest @testability feature (which made it possible to remove most 'public' methods
-* add tests for 'priority'
+* add tests for 'priority', sibling postfix operators, and the 'active' flag
+* reverted the code back to the original author's function overloaded version, which he had to back out because of Swift 1.0 compiler bugs
 
 While I'm aware of other larger projects to support Auto Layout, I prefer small and easy to understand, as in the end you may end up needing to support the code yourself.
 
+[Note that the original code did not provide any warnings that use of constant or multiplier on the left side of an equality would silently fail.]
 ### Original Notes
 
  Here's a quick example:

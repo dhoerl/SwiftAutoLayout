@@ -133,23 +133,6 @@ class SwiftAutoLayoutTests: XCTestCase {
         XCTAssertEqual(constraint1.constant, ALLayoutItem.standardConstantBetweenSiblings, "Expect constraint constant to be 8")
     }
 
-
-#if false
-    func testRelationsWithoutSecondView() {
-		let val = CGFloat(10.0 * 2.0)
-        let constraints = [view1.al_width == val,
-                           view1.al_width.equalToConstant(val),
-                           view1.al_width >= val,
-                           view1.al_width.greaterThanOrEqualToConstant(val),
-                           view1.al_width <= val,
-                           view1.al_width.lessThanOrEqualToConstant(val)]
-        
-        for constraint in constraints {
-            XCTAssertEqual(constraint.constant, CGFloat(val), "Expect constraint constant to be \(val)")
-            XCTAssertEqual(constraint.multiplier, CGFloat(1.0), "Expect constraint multiplier to be 1.0")
-        }
-    }
-#else
     func testRelationsWithoutSecondView() {
 		let val = CGFloat(10.0 * 2.0)
         let constraints = [view1.al_width == val,
@@ -164,5 +147,4 @@ class SwiftAutoLayoutTests: XCTestCase {
             XCTAssertEqual(constraint.multiplier, CGFloat(1.0), "Expect constraint multiplier to be 1.0")
         }
     }
-#endif
 }
