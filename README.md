@@ -1,6 +1,6 @@
 ## SwiftAutoLayout
 
-Latest Update October 25, 2015
+Latest Update October 30, 2015
 
 SwiftAutoLayout is a very small DSL for Auto Layout, intended to provide a more declarative way to express layout constraints.
 
@@ -13,8 +13,8 @@ While the original author has done a masterful job, the code got stale and was n
 
 dhoerl Changes:    
 
-* support 'priority' with '~!value' 
-* supply an 'identifier' value using '& String'
+* support 'priority' with '! value' 
+* supply an 'identifier' value using '-? String'
 * support setting 'active'' to false using a trailing '--'
 * class vars return the standard values for sibling and superview spacing
 * postfix operators to add ('+^') or subtract ('-^) the sibling space
@@ -27,7 +27,9 @@ dhoerl Changes:
 
 While I'm aware of other larger projects to support Auto Layout, I prefer small and easy to understand, as in the end you may end up needing to support the code yourself.
 
-[Note that the original code did not provide any warnings that use of constant or multiplier on the left side of an equality would silently fail.]
+[Note that the original code did not provide any warnings that use of constant or multiplier on the left side of an equality would silently fail. Also the functions should not
+be public, since this code might be used in a framework/library.]
+
 ### Original Notes
 
  Here's a quick example:

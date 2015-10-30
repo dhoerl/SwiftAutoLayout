@@ -109,6 +109,11 @@ class SwiftAutoLayoutTests: XCTestCase {
         XCTAssertEqual(constraint1.priority, UILayoutPriority(30), "Expect constraint multiplier to be 30")
     }
 
+    func testIdentifier() {
+        let constraint = view1.al_left == view2.al_right -? "Howdie!"
+        XCTAssertEqual(constraint.identifier, "Howdie!", "Expect identifier multiplier to be \"Howdie!\"")
+    }
+
     func testCompleteConstraint() {
         let constraint = view1.al_left == view2.al_right * 2.0 / 0.5 + 20.0 - 10.0
         XCTAssertEqual(constraint.firstItem as? ALView, view1, "Expect first item to be view1")
@@ -122,8 +127,8 @@ class SwiftAutoLayoutTests: XCTestCase {
     
     func testConstantMultiplierOnLeftSide() {
         let constraint = view1.al_left * 2.0 / 0.5 + 20.0 - 10.0 == view2.al_right
-        XCTAssertEqual(constraint.constant, CGFloat(-10.0), "Expect constraint constant to be 0.0 when expression is on wrong side of the relation")
-        XCTAssertEqual(constraint.multiplier, CGFloat(4.0), "Expect constraint multiplier to be 1.0 when expression is on wrong side of the relation")
+        XCTAssertEqual(constraint.constant, CGFloat(-10.0), "Expect constraint constant to be negative when on left")
+        XCTAssertEqual(constraint.multiplier, CGFloat(0.25), "Expect constraint multiplier to be the inverse of what it would be on the right")
     }
 
 	func testStandardWidths() {
