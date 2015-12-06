@@ -46,7 +46,7 @@ public struct ALLayoutItem {
 			multiplier = right.multiplier
 		} else
 		if right.multiplier == 1 && self.multiplier != 1 {
-			multiplier = self.multiplier
+			multiplier = 1.0/self.multiplier
 		} else {
 			fatalError("Cannot have both a left and right multiplier")
 		}
@@ -88,21 +88,19 @@ public struct ALLayoutItem {
     }
 }
 
-
 /// Multiplies the operand's multiplier by the RHS value
-public func * (left: ALLayoutItem, right: CGFloat) -> ALLayoutItem {
-	return ALLayoutItem(view: left.view, attribute: left.attribute, multiplier: left.multiplier * right, constant: left.constant)
+public func * (left: CGFloat, right: ALLayoutItem) -> ALLayoutItem {
+	return ALLayoutItem(view: right.view, attribute: right.attribute, multiplier: right.multiplier * left, constant: right.constant)
 }
-public func * (left: ALLayoutItem, right: Int) -> ALLayoutItem {
-	return ALLayoutItem(view: left.view, attribute: left.attribute, multiplier: left.multiplier * CGFloat(right), constant: left.constant)
+public func * (left: Int, right: ALLayoutItem) -> ALLayoutItem {
+	return ALLayoutItem(view: right.view, attribute: right.attribute, multiplier: right.multiplier * CGFloat(left), constant: right.constant)
 }
-
-/// Divides the operand's multiplier by the RHS value
-public func / (left: ALLayoutItem, right: CGFloat) -> ALLayoutItem {
-	return ALLayoutItem(view: left.view, attribute: left.attribute, multiplier: left.multiplier / right, constant: left.constant)
+/// Divides the operand's multiplier by the LHS value
+public func / (left: CGFloat, right: ALLayoutItem) -> ALLayoutItem {
+	return ALLayoutItem(view: right.view, attribute: right.attribute, multiplier: right.multiplier / left, constant: right.constant)
 }
-public func / (left: ALLayoutItem, right: Int) -> ALLayoutItem {
-	return ALLayoutItem(view: left.view, attribute: left.attribute, multiplier: left.multiplier / CGFloat(right), constant: left.constant)
+public func / (left: Int, right: ALLayoutItem) -> ALLayoutItem {
+	return ALLayoutItem(view: right.view, attribute: right.attribute, multiplier: right.multiplier / CGFloat(left), constant: right.constant)
 }
 
 /// Adds the RHS value to the operand's constant
@@ -141,8 +139,8 @@ public func ! (constraint: NSLayoutConstraint, priority: Int) -> NSLayoutConstra
     return constraint
 }
 /// Support identifier
-infix operator & { associativity left precedence 100 }
-public func & (constraint: NSLayoutConstraint, identifier: String) -> NSLayoutConstraint {
+infix operator -? { associativity left precedence 100 }
+public func -? (constraint: NSLayoutConstraint, identifier: String) -> NSLayoutConstraint {
     constraint.identifier = identifier
     return constraint
 }

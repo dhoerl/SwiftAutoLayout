@@ -91,14 +91,23 @@ class SwiftAutoLayoutTests: XCTestCase {
         let constraint = view1.al_left == view2.al_right - 10.0
         XCTAssertEqual(constraint.constant, CGFloat(-10.0), "Expect constraint constant to be -10.0")
     }
-    
-    func testMultiplication() {
-        let constraint = view1.al_left == view2.al_right * 2.0
-        XCTAssertEqual(constraint.multiplier, CGFloat(2.0), "Expect constraint multiplier to be 2.0")
+
+    func testMultiplicationR() {
+        let constraint0 = view1.al_left == 2.0 * view2.al_right
+        XCTAssertEqual(constraint0.multiplier, CGFloat(2.0), "Expect constraint multiplier to be 2.0")
+        let constraint1 = view1.al_left == 2 * view2.al_right
+        XCTAssertEqual(constraint1.multiplier, CGFloat(2.0), "Expect constraint multiplier to be 2")
     }
-    
+
+    func testMultiplicationL() {
+        let constraint0 = 0.5 * view1.al_left == view2.al_right
+        XCTAssertEqual(constraint0.multiplier, CGFloat(2.0), "Expect constraint multiplier to be 2.0")
+        let constraint1 = 2 * view1.al_left == view2.al_right
+        XCTAssertEqual(constraint1.multiplier, CGFloat(0.5), "Expect constraint multiplier to be 0.5")
+    }
+	
     func testDivision() {
-        let constraint = view1.al_left == view2.al_right / 2.0
+        let constraint = view1.al_left == 2.0 / view2.al_right
         XCTAssertEqual(constraint.multiplier, CGFloat(0.5), "Expect constraint multiplier to be 0.5")
     }
 
@@ -115,7 +124,7 @@ class SwiftAutoLayoutTests: XCTestCase {
     }
 
     func testCompleteConstraint() {
-        let constraint = view1.al_left == view2.al_right * 2.0 / 0.5 + 20.0 - 10.0
+        let constraint = view1.al_left == 4 * view2.al_right + 20.0 - 10.0
         XCTAssertEqual(constraint.firstItem as? ALView, view1, "Expect first item to be view1")
         XCTAssertEqual(constraint.firstAttribute, NSLayoutAttribute.Left, "Expect first attribute to be NSLayoutAttribute.Left")
         XCTAssertEqual(constraint.relation, NSLayoutRelation.Equal, "Expect constraint relation to be NSLayoutRelation.Equal")
@@ -126,7 +135,7 @@ class SwiftAutoLayoutTests: XCTestCase {
     }
     
     func testConstantMultiplierOnLeftSide() {
-        let constraint = view1.al_left * 2.0 / 0.5 + 20.0 - 10.0 == view2.al_right
+        let constraint = 4 * view1.al_left + 20.0 - 10.0 == view2.al_right
         XCTAssertEqual(constraint.constant, CGFloat(-10.0), "Expect constraint constant to be negative when on left")
         XCTAssertEqual(constraint.multiplier, CGFloat(0.25), "Expect constraint multiplier to be the inverse of what it would be on the right")
     }

@@ -1,6 +1,6 @@
 ## SwiftAutoLayout
 
-Latest Update October 30, 2015
+Latest Update Nov 2, 2015
 
 SwiftAutoLayout is a very small DSL for Auto Layout, intended to provide a more declarative way to express layout constraints.
 
@@ -13,12 +13,13 @@ While the original author has done a masterful job, the code got stale and was n
 
 dhoerl Changes:    
 
+* flipped the multiplication/division operators to align with Apple's AutoLayout Guide
+* support using constants and multipliers on either side of an equality (additive contants change sign, multiplicative ones invert)
 * support 'priority' with '! value' 
 * supply an 'identifier' value using '-? String'
 * support setting 'active'' to false using a trailing '--'
 * class vars return the standard values for sibling and superview spacing
 * postfix operators to add ('+^') or subtract ('-^) the sibling space
-* support using constants and multipliers on either side of an equality
 * add additional methods to permit the use of 'Ints' in multipliers, constants, and priority
 * add the new 'NSLayoutAttribute' attributes introduced in iOS8
 * incorporate the latest @testability feature (which made it possible to remove most 'public' methods
@@ -27,8 +28,8 @@ dhoerl Changes:
 
 While I'm aware of other larger projects to support Auto Layout, I prefer small and easy to understand, as in the end you may end up needing to support the code yourself.
 
-[Note that the original code did not provide any warnings that use of constant or multiplier on the left side of an equality would silently fail. Also the functions should not
-be public, since this code might be used in a framework/library.]
+[Note that the original code did not provide any warnings that use of a constant and/or multiplier on the left side of an equality would silently fail.
+These functions should not be public, since this code might be used in a framework/library of an app that also uses it.]
 
 ### Original Notes
 
@@ -36,7 +37,7 @@ be public, since this code might be used in a framework/library.]
  
 ```swift
 // this:
-let constraint = view1.al_left == view2.al_right * 2 + 10 ~ 100
+let constraint = view1.al_left == 2 * view2.al_right + 10 ~ 100
 		
 // is equivalent to:
 let constraint = NSLayoutConstraint(item: view1, attribute: NSLayoutAttribute.Left, relatedBy: NSLayoutRelation.Equal, toItem: view2, attribute: NSLayoutAttribute.Right, multiplier: 2.0, constant: 10.0) with a priority of 100
@@ -62,10 +63,10 @@ If you think I'm crazy for overloading operators like `==` (even though it doesn
 
 ```swift
 // this:
-let constraint = view1.al_left == view2.al_right * 2.0 + 10.0
+let constraint = view1.al_left == 2.0 * view2.al_right + 10.0
 		
 // is equivalent to:
-let constraint = view1.al_left.equalTo(view2.al_right * 2.0 + 10.0))
+let constraint = view1.al_left.equalTo(2.0 * view2.al_right + 10.0))
 ```
 `equalTo()`, `greaterThanOrEqualTo()`, and `lessThanOrEqualTo()` are equivalent to `==`, `>=`, and `<=`, respectively.
 
